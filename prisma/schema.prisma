@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int         @id @default(autoincrement())
+  name      String      @db.VarChar(255)
+  email     String      @unique @db.VarChar(255)
+  password  String      @db.VarChar(255)
+  type      String
+  schedules Scheduler[] @relation("SchedulerUserId")
+  providers Provider[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Session   Session[]
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String     @db.VarChar(30)
+  provider  Provider[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Provider {
+  id                   Int         @id @default(autoincrement())
+  userId               Int
+  user                 User        @relation(fields: [userId], references: [id])
+  name                 String      @db.VarChar(255)
+  address              String      @db.VarChar(255)
+  location             String      @db.VarChar(255)
+  available_start      DateTime
+  available_end        DateTime
+  appointment_received Scheduler[] @relation("SchedulerProviderServicesId")
+  categoryId           Int
+  category             Category    @relation(fields: [categoryId], references: [id])
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+}
+
+model Scheduler {
+  id                  Int      @id @default(autoincrement())
+  userId              Int
+  user                User     @relation("SchedulerUserId", fields: [userId], references: [id])
+  provider_service_id Int
+  serviceProvider     Provider @relation("SchedulerProviderServicesId", fields: [provider_service_id], references: [id])
+  schedule_date       DateTime
+  schedule_time       DateTime
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  User      User     @relation(fields: [userId], references: [id])
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
