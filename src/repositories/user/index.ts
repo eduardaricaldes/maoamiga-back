@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/config';
+import { SignUpBodyParams } from '@/services/user';
 
 export async function findByEmail(email: string, select?: Prisma.UserSelect) {
   const params: Prisma.UserFindUniqueArgs = {
@@ -13,4 +14,21 @@ export async function findByEmail(email: string, select?: Prisma.UserSelect) {
   }
 
   return prisma.user.findUnique(params);
+}
+
+export async function createUserDefault(params: SignUpBodyParams) {
+  const {
+    name,
+    email,
+    password,
+    type,
+  } = params;
+  return prisma.user.create({
+    data: {
+      name,
+      email,
+      password,
+      type,
+    }
+  })
 }
