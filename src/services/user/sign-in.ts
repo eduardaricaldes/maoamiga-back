@@ -38,7 +38,6 @@ async function createSession(userId: number) {
 }
 
 export type SignInParamsBody = Pick<User, | "email" | "password">
-
 interface SignInResult {
   id: number,
   email: string,

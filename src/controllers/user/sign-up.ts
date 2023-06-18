@@ -8,12 +8,10 @@ export async function SignUp(req:Request, res:Response) {
       name,
       password,
       email,
-      type,
     } = req.body as SignUpBodyParams
     await SignUpUserService({
       name,
       password,
-      type,
       email,
     })
     return res.status(httpStatus.CREATED).send({});

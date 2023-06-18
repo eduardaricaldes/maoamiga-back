@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import { Request, Response } from 'express';
 
-import { SignInParamsBody, SignInService } from '@/services/authentication';
+import { SignInParamsBody, SignInService } from '@/services/user/sign-in';
 
 export async function SignIn(req: Request, res: Response) {
   try {

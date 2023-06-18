@@ -21,14 +21,14 @@ export async function createUserDefault(params: SignUpBodyParams) {
     name,
     email,
     password,
-    type,
+    location,
   } = params;
   return prisma.user.create({
     data: {
       name,
       email,
       password,
-      type,
+      location,
     }
   })
 }

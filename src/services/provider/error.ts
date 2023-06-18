@@ -1,5 +1,6 @@
 import { ApplicationError } from '@/protocols';
 
+
 export function EmailAlreadyExists(): ApplicationError {
   return {
     name: 'EmailAlreadyExists',
@@ -7,16 +8,16 @@ export function EmailAlreadyExists(): ApplicationError {
   };
 }
 
-export function InvalidType(): ApplicationError {
+export function CategoryDoesntExist(): ApplicationError {
   return {
-    name: 'InvalidType',
-    message: 'Invalid type',
+    name: 'CategoryDoesntExist',
+    message: "Category Doesn't Exist",
   };
 }
 
-export function invalidCredentialsError(): ApplicationError {
+export function invalidCredentialsProviderError(): ApplicationError {
   return {
-    name: 'InvalidCredentialsError',
+    name: 'invalidCredentialsProviderError',
     message: 'email or password are incorrect',
   };
 }

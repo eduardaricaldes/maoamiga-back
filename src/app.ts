@@ -5,8 +5,9 @@ import { loadEnv, connectDb, disconnectDB } from '@/config';
 loadEnv();
 
 import {
-  authenticationRouter,
   userRouter,
+  providerRouter,
+  
 } from "@/routes";
 
 const app = express();
@@ -15,8 +16,8 @@ app.use(express.json());
 app
   .use(cors())
   .use(express.json())
-  .use("/auth", authenticationRouter)
-  .use("/user", userRouter);
+  .use("/user", userRouter)
+  .use("/provider", providerRouter);
 
 export function init(): Promise<Express> {
   connectDb();
