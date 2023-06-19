@@ -1,8 +1,11 @@
-import { Prisma } from '@prisma/client';
-import { prisma } from '@/config';
-import { SignUpBodyParamsProvider } from '@/services';
+import { Prisma, Provider } from "@prisma/client";
+import { prisma } from "@/config";
+import { SignUpBodyParamsProvider } from "@/services";
 
-export async function findByEmailProvider(email: string, select?: Prisma.UserSelect) {
+export async function findByEmailProvider(
+  email: string,
+  select?: Prisma.ProviderSelect
+) {
   const params: Prisma.ProviderFindUniqueArgs = {
     where: {
       email,
@@ -13,7 +16,7 @@ export async function findByEmailProvider(email: string, select?: Prisma.UserSel
     params.select = select;
   }
 
-  return prisma.user.findUnique(params);
+  return prisma.provider.findUnique(params);
 }
 
 export async function CreatProvideDefault(params: SignUpBodyParamsProvider) {
@@ -27,7 +30,7 @@ export async function CreatProvideDefault(params: SignUpBodyParamsProvider) {
     categoryId,
   } = params;
   return prisma.provider.create({
-    data:{
+    data: {
       name,
       email,
       password,
@@ -35,6 +38,17 @@ export async function CreatProvideDefault(params: SignUpBodyParamsProvider) {
       availableEnd,
       availableStart,
       categoryId,
-    }
-  })
+    },
+  });
+}
+
+export async function SeachProviderId(
+  providerId: number
+): Promise<Provider | null> {
+  const provider = await prisma.provider.findUnique({
+    where: {
+      id: providerId,
+    },
+  });
+  return provider;
 }
