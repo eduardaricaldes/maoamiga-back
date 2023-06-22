@@ -1,4 +1,5 @@
-import app, { init } from '@/app';
+import "reflect-metadata";
+import app, { init } from "@/app";
 
 const port = process.env.PORT || 4000;
 

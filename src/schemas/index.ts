@@ -15,6 +15,7 @@ export const signUpUserSchema = Joi.object<SignUpBodyParams>({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
   name: Joi.string().required(),
+  location: Joi.string().required(),
 });
 
 export const signUpUserProviderSchema = Joi.object<SignUpBodyParamsProvider>({

@@ -1,38 +1,25 @@
-import { DateTime } from "luxon";
 import { Scheduler } from "@prisma/client";
-import { SeachProviderId } from "@/repositories/provider";
-import { prisma } from "@/config";
+import { notfindiduser, notexistscheduler } from "./error";
+import { schedullingHasAvailabilityProvider, seachProviderId } from "@/repositories/provider";
+import { itisnotavailable } from "@/services/provider";
+import { createScheduler, findSchedulerByDateAndTime } from "@/repositories/scheduler";
 
-export async function SchedulerService(
-  params: SchedulerParamsBody
-): Promise<SchedulerInterface | boolean | undefined> {
-  const provider = await SeachProviderId(params.providerServiceId);
+export async function SchedulerService(params: SchedulerParamsBody): Promise<SchedulerInterface | boolean | undefined> {
+  const provider = await seachProviderId(params.providerServiceId);
   if (!provider) {
-    return false;
+    throw notfindiduser;
   }
 
-  const existingScheduler = await prisma.scheduler.findFirst({
-    where: {
-      providerServiceId: params.providerServiceId,
-      scheduleDate: params.scheduleDate,
-      scheduleTime: params.scheduleTime,
-    },
-  });
+  const existingScheduler = await findSchedulerByDateAndTime(provider.id, params.scheduleDate, params.scheduleTime);
   if (existingScheduler) {
-    return false;
+    throw notexistscheduler();
+  }
+  const isInAvailability = await schedullingHasAvailabilityProvider(params.scheduleTime, provider.id);
+  if (!isInAvailability) {
+    throw itisnotavailable();
   }
 
-  const newScheduler = await prisma.scheduler.create({
-    data: {
-      userId: params.userId,
-      providerServiceId: params.providerServiceId,
-      scheduleDate: params.scheduleDate,
-      scheduleTime: params.scheduleTime,
-    },
-    include: {
-      user: true,
-    },
-  });
+  const newScheduler = await createScheduler(params);
 
   const schedulerData: SchedulerInterface = {
     id: newScheduler.id,
@@ -41,38 +28,32 @@ export async function SchedulerService(
       id: newScheduler.user.id,
       name: newScheduler.user.name,
       email: newScheduler.user.email,
-      password: newScheduler.user.password,
       location: newScheduler.user.location,
     },
     providerServiceId: newScheduler.providerServiceId,
-    scheduleDate: DateTime.fromJSDate(newScheduler.scheduleDate),
-    scheduleTime: DateTime.fromJSDate(newScheduler.scheduleTime),
-    createdAt: DateTime.fromJSDate(newScheduler.createdAt),
-    updatedAt: DateTime.fromJSDate(newScheduler.updatedAt),
+    scheduleDate: newScheduler.scheduleDate,
+    scheduleTime: newScheduler.scheduleTime,
+    createdAt: newScheduler.createdAt,
+    updatedAt: newScheduler.updatedAt,
   };
   return schedulerData;
 }
 
-export type SchedulerParamsBody = Pick<
-  Scheduler,
-  "providerServiceId" | "scheduleDate" | "scheduleTime" | "userId"
->;
-
+export type SchedulerParamsBody = Pick<Scheduler, "providerServiceId" | "scheduleDate" | "scheduleTime" | "userId">;
 interface SchedulerInterface {
   id: number;
   userId: number;
   user: UserInterface;
   providerServiceId: number;
-  scheduleDate: DateTime;
-  scheduleTime: DateTime;
-  createdAt: DateTime;
-  updatedAt: DateTime;
+  scheduleDate: Date;
+  scheduleTime: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface UserInterface {
   id: number;
   name: string;
   email: string;
-  password: string;
   location: string;
 }
