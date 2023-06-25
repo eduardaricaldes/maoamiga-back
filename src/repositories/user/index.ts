@@ -16,6 +16,7 @@ export async function findByEmail(email: string, select?: Prisma.UserSelect) {
   return prisma.user.findUnique(params);
 }
 
+// example to save: const squareGeometry = { type: 'Polygon', coordinates: [[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]] };
 export async function createUserDefault(params: SignUpBodyParams) {
   const { name, email, password, location } = params;
   return prisma.user.create({
@@ -23,7 +24,7 @@ export async function createUserDefault(params: SignUpBodyParams) {
       name,
       email,
       password,
-      location,
+      location: JSON.stringify(location),
     },
   });
 }
