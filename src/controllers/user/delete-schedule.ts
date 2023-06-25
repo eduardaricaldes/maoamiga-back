@@ -1,13 +1,14 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import httpStatus from "http-status";
 import { getScheduleUserId } from "@/services/user";
 import { BaseApplicationError } from "@/errors";
+import { AuthenticatedRequest } from "@/middlewares";
 
-export async function DeleteScheduler(req: Request, res: Response) {
-  const { userId } = req.params;
+export async function DeleteScheduler(req: AuthenticatedRequest, res: Response) {
+  const { userId = 0 } = req;
   const { id } = req.params;
   try {
-    const schedules = await getScheduleUserId(parseInt(id), parseInt(userId));
+    const schedules = await getScheduleUserId(parseInt(id), userId);
     return res.json(schedules);
   } catch (error) {
     if (error instanceof BaseApplicationError) {

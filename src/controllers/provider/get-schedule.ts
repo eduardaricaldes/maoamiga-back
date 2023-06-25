@@ -1,13 +1,14 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import httpStatus from "http-status";
 import { getScheduleByProvider } from "@/services/provider";
 import { BaseApplicationError } from "@/errors";
+import { AuthenticatedProviderRequest } from "@/middlewares";
 
-export async function GetScheduler(req: Request, res: Response) {
-  const { providerId } = req.params;
+export async function GetScheduler(req: AuthenticatedProviderRequest, res: Response) {
+  const { providerId = 0 } = req;
   const { id } = req.params;
   try {
-    const schedules = await getScheduleByProvider(parseInt(id), parseInt(providerId));
+    const schedules = await getScheduleByProvider(parseInt(id), providerId);
     return res.json(schedules);
   } catch (error) {
     if (error instanceof BaseApplicationError) {

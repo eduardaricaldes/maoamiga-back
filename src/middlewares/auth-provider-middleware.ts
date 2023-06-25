@@ -9,7 +9,7 @@ interface JWTPayload {
   providerId?: number;
 }
 
-type AuthenticatedProviderRequest = Request & JWTPayload;
+export type AuthenticatedProviderRequest = Request & JWTPayload;
 
 export async function authenticateProvider(req: AuthenticatedProviderRequest, res: Response, next: NextFunction) {
   const authHeader = req.header("Authorization");

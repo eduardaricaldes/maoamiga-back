@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import httpStatus from "http-status";
 import { GetAllSchedules } from "@/services/provider";
 import { BaseApplicationError } from "@/errors";
+import { AuthenticatedProviderRequest } from "@/middlewares";
 
-export async function GetSchedules(req: Request, res: Response) {
-  const providerId = parseInt(req.params.id);
+export async function GetSchedules(req: AuthenticatedProviderRequest, res: Response) {
+  const { providerId = 0 } = req;
 
   try {
     const schedules = await GetAllSchedules(providerId);

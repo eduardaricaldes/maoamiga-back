@@ -9,7 +9,7 @@ interface JWTPayload {
   userId?: number;
 }
 
-type AuthenticatedRequest = Request & JWTPayload;
+export type AuthenticatedRequest = Request & JWTPayload;
 
 export async function authenticateUser(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const authHeader = req.header("Authorization");

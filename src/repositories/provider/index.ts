@@ -40,17 +40,30 @@ export async function seachProviderId(providerId: number): Promise<Provider | nu
   return provider;
 }
 
-export async function schedullingHasAvailabilityProvider(SchedulerTime: Date, providerId: number) {
+export async function schedullingHasAvailabilityProvider(SchedulerTime: Date, providerId: number): Promise<boolean> {
   const provider = await prisma.provider.findFirst({
     where: {
       id: providerId,
-      availableStart: {
-        lte: SchedulerTime,
-      },
-      availableEnd: {
-        gte: SchedulerTime,
-      },
     },
   });
-  return provider;
+
+  if (provider) {
+    const { availableStart, availableEnd } = provider;
+
+    const startHour = availableStart.getHours();
+    const startMinute = availableStart.getMinutes();
+    const endHour = availableEnd.getHours();
+    const endMinute = availableEnd.getMinutes();
+    const checkHour = SchedulerTime.getHours();
+    const checkMinute = SchedulerTime.getMinutes();
+
+    if (checkHour > startHour && checkHour < endHour) {
+      return true;
+    } else if (checkHour === startHour && checkMinute >= startMinute) {
+      return true;
+    } else if (checkHour === endHour && checkMinute <= endMinute) {
+      return true;
+    }
+  }
+  return false;
 }

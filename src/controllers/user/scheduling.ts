@@ -1,11 +1,13 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import httpStatus from "http-status";
 import { SchedulerParamsBody, SchedulerService } from "@/services/user/scheduling";
 import { BaseApplicationError } from "@/errors";
+import { AuthenticatedRequest } from "@/middlewares";
 
-export async function SchedulerController(req: Request, res: Response) {
+export async function SchedulerController(req: AuthenticatedRequest, res: Response) {
   try {
-    const { userId, providerServiceId, scheduleDate, scheduleTime } = req.body as SchedulerParamsBody;
+    const { userId = 0 } = req;
+    const { providerServiceId, scheduleDate, scheduleTime } = req.body as SchedulerParamsBody;
     const response = await SchedulerService({
       userId,
       providerServiceId,
