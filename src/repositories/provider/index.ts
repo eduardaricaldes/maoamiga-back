@@ -16,6 +16,8 @@ export async function findByEmailProvider(email: string, select?: Prisma.Provide
   return prisma.provider.findUnique(params);
 }
 
+// location to save: ex const squareGeometry = { type: 'Polygon', coordinates: [[[0, 0], [0, 1], [1, 1], [1, 0], [0, 0]]] };
+
 export async function createProvider(params: SignUpBodyParamsProvider) {
   const { name, email, password, location, availableEnd, availableStart, categoryId } = params;
   return prisma.provider.create({
@@ -23,7 +25,7 @@ export async function createProvider(params: SignUpBodyParamsProvider) {
       name,
       email,
       password,
-      location,
+      location: JSON.stringify(location),
       availableEnd,
       availableStart,
       categoryId,
