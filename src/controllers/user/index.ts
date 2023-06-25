@@ -5,3 +5,4 @@ export * from "./scheduling";
 export * from "./get-schedule";
 export * from "./delete-schedule";
 export * from "./update-schedule";
+export * from "./get-providers";

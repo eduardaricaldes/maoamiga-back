@@ -67,3 +67,22 @@ export async function schedullingHasAvailabilityProvider(SchedulerTime: Date, pr
   }
   return false;
 }
+
+export async function findProvidersByLocationAndCategory(latitude: number, longitude: number, categoryId: number) {
+  const query = await prisma.provider.findMany({
+    where: {
+      AND: [
+        {
+          categoryId: categoryId ?? undefined,
+        },
+        {
+          location: {
+            contains: `POINT(${longitude} ${latitude})`,
+          },
+        },
+      ],
+    },
+  });
+
+  return query;
+}

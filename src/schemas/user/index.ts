@@ -3,8 +3,8 @@ import {
   SchedulerParamsBody,
   SignInParamsBody,
   SignUpBodyParams,
-  SignUpBodyParamsProvider,
   UpdateSchedulerParams,
+  UserGetProvidersParams,
 } from "@/services";
 
 export const signInSchema = Joi.object<SignInParamsBody>({
@@ -19,16 +19,6 @@ export const signUpUserSchema = Joi.object<SignUpBodyParams>({
   location: Joi.string().required(),
 });
 
-export const signUpUserProviderSchema = Joi.object<SignUpBodyParamsProvider>({
-  email: Joi.string().email().required(),
-  password: Joi.string().required(),
-  name: Joi.string().required(),
-  location: Joi.string().required(),
-  availableEnd: Joi.string().isoDate().required(),
-  availableStart: Joi.string().isoDate().required(),
-  categoryId: Joi.number().integer().required(),
-});
-
 export const SchedullingUserSchema = Joi.object<SchedulerParamsBody>({
   providerServiceId: Joi.number().required(),
   scheduleDate: Joi.string().isoDate().required(),
@@ -39,4 +29,10 @@ export const SchedullingUserSchema = Joi.object<SchedulerParamsBody>({
 export const updateScheduleSchema = Joi.object<UpdateSchedulerParams>({
   scheduleDate: Joi.date().required(),
   scheduleTime: Joi.date().required(),
+});
+
+export const findProviderParams = Joi.object<UserGetProvidersParams>({
+  categoryId: Joi.number().integer().required(),
+  lat: Joi.number().required(),
+  long: Joi.number().required(),
 });

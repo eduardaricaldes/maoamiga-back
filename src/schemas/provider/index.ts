@@ -13,5 +13,5 @@ export const signUpProviderSchema = Joi.object<SignUpBodyParamsProvider>({
   location: Joi.string().required(),
   availableEnd: Joi.date().required(),
   availableStart: Joi.date().required(),
-  categoryId: Joi.number().required(),
+  categoryId: Joi.number().integer().required(),
 });
