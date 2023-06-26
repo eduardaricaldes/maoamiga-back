@@ -15,7 +15,11 @@
     "dev:migration:run": "npm run dev:load-envs prisma migrate deploy",
     "dev:migration:generate": "npm run dev:load-envs prisma migrate dev",
     "prisma": "prisma",
-    "dev": "cross-env NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts"
+    "dev": "cross-env NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts",
+    "dev:seed": "npm run dev:load-envs prisma db seed"
+  },
+  "prisma": {
+    "seed": "npm run dev:load-envs -- ts-node prisma/seed.ts"
   },
   "repository": {
     "type": "git",
@@ -49,6 +53,7 @@
     "@types/jest": "^29.5.2",
     "@types/jsonwebtoken": "^9.0.2",
     "@types/luxon": "^3.3.0",
+    "@types/node": "^20.3.1",
     "@typescript-eslint/eslint-plugin": "^5.59.9",
     "@typescript-eslint/parser": "^5.59.9",
     "cross-env": "^7.0.3",
